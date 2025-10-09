@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <!-- GSAP and ScrollTrigger Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <style>
+        /* Custom colors and variables */
+        :root {
+            --accent-color: #E83E8C; /* Pink accent for dance studio */
+            --secondary-color: #6A0DAD; /* Purple secondary color */
+            --text-color: #0E0D0D;
+            --bg-color: #FFFFFF;
+        }
+        
+        /* Custom font classes */
+        .font-favorit {
+            font-family: 'Favorit', sans-serif;
+        }
+        
+        /* Navbar styling */
+        nav {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+        
+        nav a {
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            position: relative;
+            padding-bottom: 4px;
+        }
+        
+        /* Desktop nav links effect */
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+            transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+        
+        nav a:hover::after,
+        nav a.active::after {
+            width: 100%;
+        }
+        
+        /* Logo hover effect */
+        .logo a:hover span:first-child {
+            background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: all 0.3s ease;
+        }
+        
+        /* Dot animation for logo */
+        .logo a span:last-child {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+        
+        /* Nav links hover effect */
+        nav .hidden.md\:flex a:hover {
+            transform: translateY(-1px);
+            transition: transform 0.2s ease;
+        }
+        
+        /* Custom animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes revealRight {
+            from {
+                transform: scaleX(0);
+                transform-origin: left;
+            }
+            to {
+                transform: scaleX(1);
+                transform-origin: left;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        /* Reveal animations - set to visible by default with animations */
+        .reveal-element {
+            opacity: 1; /* Make visible by default */
+            animation: fadeIn 0.8s ease-out forwards;
+            animation-play-state: running; /* Auto-play animations */
+        }
+        
+        .reveal-text {
+            opacity: 1; /* Make visible by default */
+            transform: translateY(0); /* Start in final position */
+            animation: slideUp 0.8s ease-out forwards;
+            animation-play-state: running; /* Auto-play animations */
+        }
+        
+        .reveal-line {
+            transform: scaleX(1); /* Start fully visible */
+            transform-origin: left;
+            animation: revealRight 0.8s ease-out forwards;
+            animation-delay: 0.3s;
+            animation-play-state: running; /* Auto-play animations */
+        }
+        
+        .reveal-image {
+            opacity: 1; /* Make visible by default */
+            transform: scale(1); /* Start in final position */
+            animation: scaleIn 1s ease-out forwards;
+            animation-play-state: running; /* Auto-play animations */
+        }
+        
+        .reveal-feature {
+            opacity: 1; /* Make visible by default */
+            transform: translateY(0); /* Start in final position */
+            animation: slideUp 0.8s ease-out forwards;
+            animation-play-state: running; /* Auto-play animations */
+        }
+        
+        .reveal-button {
+            opacity: 1; /* Make visible by default */
+            animation: fadeIn 0.8s ease-out forwards;
+            animation-delay: 0.6s;
+            animation-play-state: running; /* Auto-play animations */
+        }
+        
+        /* Delay classes */
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+        
+        .delay-400 {
+            animation-delay: 0.4s;
+        }
+        
+        /* Button hover animations */
+        @keyframes slideRight {
+            0% { width: 0; }
+            100% { width: 100%; }
+        }
+        
+        .btn-hover-effect {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        /* Gallery button animation */
+        .gallery-btn {
+            position: relative;
+            overflow: hidden;
+            transition: color 0.5s ease;
+        }
+        
+        .gallery-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background-color: black;
+            transition: width 0.5s ease;
+            z-index: -1;
+        }
+        
+        .gallery-btn:hover {
+            color: white;
+        }
+        
+        .gallery-btn:hover::before {
+            width: 100%;
+        }
+        
+        .mobile-link.text-\[\#E83E8C\]::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #E83E8C;
+        }
+        
+        .btn-hover-effect:hover {
+            color: white;
+        }
+        
+        /* Map marker animations */
+        @keyframes ping {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            75%, 100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        .animate-ping {
+            animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(-5%);
+                animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+            }
+            50% {
+                transform: translateY(0);
+                animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+            }
+        }
+        
+        .animate-bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        /* Gallery masonry grid styles */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-auto-rows: 10px;
+            grid-gap: 16px;
+        }
+        
+        .gallery-item {
+            grid-row-end: span var(--span);
+            position: relative;
+            overflow: hidden;
+            border-radius: 4px;
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 1s ease-out forwards;
+        }
+        
+        /* Header scroll effect */
+        header {
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            background-color: rgba(255, 255, 255, 0.98);
+        }
+        
+        /* Navbar blur effect using multiple approaches for compatibility */
+        nav {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Pseudo-element approach for blur effect */
+        nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background-color: rgba(245, 245, 245, 0.85);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+        }
+        
+        .nav-blur {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            background-color: transparent !important; /* Let the pseudo-element handle the background */
+            -webkit-transform: translateZ(0); /* Force hardware acceleration */
+            transform: translateZ(0);
+            will-change: backdrop-filter, background-color; /* Hint for browser optimization */
+        }
+        
+        /* For browsers that don't support backdrop-filter */
+        @supports not ((backdrop-filter: blur(25px)) or (-webkit-backdrop-filter: blur(25px))) {
+            .nav-blur {
+                background-color: rgba(245, 245, 245, 0.9) !important;
+            }
+        }
+        
+        /* Alternative blur implementation for some browsers */
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            /* IE10+ CSS */
+            .nav-blur {
+                background-color: rgba(245, 245, 245, 0.9) !important;
+            }
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Favorit', 'Montserrat', sans-serif;
+            overflow-x: hidden;
+        }
+        .section {
+            min-height: 100vh;
+            padding: 80px 0;
+            position: relative;
+        }
+        .reveal {
+            opacity: 0;
+            visibility: hidden;
+        }
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Preloader Styles */
+        @font-face {
+            font-family: 'Favorit';
+            src: url('fonts/favorit-regular.woff2') format('woff2'),
+                 url('fonts/favorit-regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Favorit';
+            src: url('fonts/favorit-bold.woff2') format('woff2'),
+                 url('fonts/favorit-bold.woff') format('woff');
+            font-weight: bold;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Favorit';
+            src: url('fonts/favorit-book-italic.woff2') format('woff2'),
+                 url('fonts/favorit-book-italic.woff') format('woff');
+            font-weight: normal;
+            font-style: italic;
+            font-display: swap;
+        }
+        
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .preloader::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--accent-color) 0%, transparent 70%);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .preloader::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, var(--secondary-color) 0%, transparent 70%);
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .preloader-images {
+            position: relative;
+            width: 100%;
+            height: 50vh;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preloader-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 25vw; /* Smaller width */
+            max-width: 350px;
+            height: 30vh; /* Smaller height */
+            max-height: 250px;
+            opacity: 0;
+            object-fit: cover;
+            transform: translate(-50%, -50%) scale(0.8);
+            filter: grayscale(100%) contrast(120%);
+            transition: filter 0.5s ease;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            will-change: transform, opacity;
+            z-index: 5;
+        }
+        
+        /* Adjust z-index for better layering - ensure all are visible */
+        .preloader-image:nth-child(1) { z-index: 5; }
+        .preloader-image:nth-child(2) { z-index: 6; }
+        .preloader-image:nth-child(3) { z-index: 10; } /* Middle image on top */
+        .preloader-image:nth-child(4) { z-index: 7; }
+        .preloader-image:nth-child(5) { z-index: 8; }
+        
+        .preloader-image.active {
+            filter: grayscale(0%) contrast(110%) brightness(1.1);
+        }
+        
+        .preloader-images::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 30%, black 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .preloader-images::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.8);
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        .preloader-text {
+            color: white;
+            font-size: 3rem;
+            text-align: center;
+            overflow: hidden;
+            height: 5rem;
+            position: relative;
+            margin-bottom: 2rem;
+            font-family: 'Favorit', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        
+        .preloader-text .text-reveal {
+            transform: translateY(100%);
+            display: inline-block;
+            margin: 0 0.5rem;
+            position: relative;
+            overflow: hidden;
+            padding: 0 0.2rem;
+        }
+        
+        /* Add extra space before KG1 */
+        .preloader-text .text-reveal:nth-child(3) {
+            margin-left: 1rem;
+        }
+        
+        /* Apply different font styles to each word */
+        .preloader-text .text-reveal:nth-child(1),
+        .preloader-text .text-reveal:nth-child(2) {
+            /* First two words (Going through) use book-italic */
+            font-family: 'Favorit';
+            font-style: italic;
+            font-weight: normal;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .preloader-text .text-reveal:nth-child(3),
+        .preloader-text .text-reveal:nth-child(4) {
+            /* Last two words (KG1 Studio) use bold */
+            font-family: 'Favorit';
+            font-weight: bold;
+            font-style: normal;
+            text-shadow: 0 0 15px rgba(232, 62, 140, 0.5);
+        }
+        
+        .preloader-text .text-reveal::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        
+        .preloader-text .text-reveal.active::after {
+            transform: scaleX(1);
+        }
+        
+        .loading-container {
+            position: absolute;
+            bottom: 5%;
+            left: 5%;
+            width: 200px;
+            max-width: 30%;
+            text-align: left;
+        }
+        
+        .loading-bar-container {
+            width: 100%;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loading-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: width 0.2s ease-out;
+            box-shadow: 0 0 10px 1px rgba(232, 62, 140, 0.5);
+        }
+        
+        .loading-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 5px;
+            background: white;
+            opacity: 0.8;
+        }
+        
+        .loading-percentage {
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: left;
+            margin-top: 0.5rem;
+            font-family: 'Favorit', sans-serif;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .loading-percentage span {
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 2.5rem;
+            margin-left: 0.5rem;
+        }
+        
+        /* Particles */
+        .particles-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Colored particles */
+        .particle:nth-child(3n) {
+            background-color: rgba(232, 62, 140, 0.6); /* Pink */
+            box-shadow: 0 0 10px 2px rgba(232, 62, 140, 0.4);
+        }
+        
+        .particle:nth-child(3n+1) {
+            background-color: rgba(106, 13, 173, 0.6); /* Purple */
+            box-shadow: 0 0 10px 2px rgba(106, 13, 173, 0.4);
+        }
+        
+        /* Preloader Logo */
+        .preloader-logo {
+            position: absolute;
+            top: 5%;
+            font-family: 'Favorit', sans-serif;
+            font-weight: bold;
+            font-size: 3rem;
+            color: white;
+            letter-spacing: 2px;
+            z-index: 10;
+            text-shadow: 0 0 15px rgba(232, 62, 140, 0.7);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: logoReveal 1s ease-out 0.5s forwards;
+        }
+        
+        @keyframes logoReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-white" style="color: #0E0D0D;">
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="particles-container"></div>
+        <div class="preloader-logo">KG1</div>
+        <div class="preloader-images">
+            <img src="gallery/2024-03-23 (1).jpg" alt="KG1 Studio Dance" class="preloader-image">
+            <img src="gallery/2024-03-23 (3).jpg" alt="KG1 Studio Performance" class="preloader-image">
+            <img src="gallery/2024-03-23 (5).jpg" alt="KG1 Studio Dancer" class="preloader-image">
+            <img src="gallery/unnamed (1).jpg" alt="KG1 Studio Class" class="preloader-image">
+            <img src="gallery/unnamed (3).jpg" alt="KG1 Studio Workshop" class="preloader-image">
+        </div>
+        <div class="preloader-text">
+            <span class="text-reveal">Going</span>
+            <span class="text-reveal">through</span>
+            <span class="text-reveal">KG1</span>
+            <span class="text-reveal">Studio</span>
+        </div>
+        <div class="loading-container">
+            <div class="loading-bar-container">
+                <div class="loading-bar"></div>
+            </div>
+            <div class="loading-percentage">LOADING<span>0%</span></div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->  
+    <header class="fixed w-full top-0 left-0 z-50 transition-all duration-300">
+        <nav class="py-6 px-6 md:px-16 lg:px-24 flex justify-between items-center bg-[#f5f5f5]/90 transition-all duration-500 relative">
+            <!-- Dedicated blur background element -->
+            <div class="absolute inset-0 bg-[#f5f5f5]/90 backdrop-blur-md -z-10 pointer-events-none"></div>
+            <!-- Logo/Brand -->  
+            <div class="logo">
+                <a href="#" class="text-[#0E0D0D] font-medium text-sm md:text-base font-favorit tracking-wider">
+                    KG1 Studio
+                </a>
+            </div>
+            
+            <!-- Desktop Navigation - Right Aligned -->  
+            <div class="hidden md:flex items-center space-x-8 ml-auto">
+                <a href="#" class="text-[#0E0D0D] hover:text-[#E83E8C] transition-colors duration-300 font-favorit text-sm tracking-wide font-medium active">
+                    Home
+                </a>
+                <a href="#about" class="text-[#0E0D0D] hover:text-[#E83E8C] transition-colors duration-300 font-favorit text-sm tracking-wide">
+                    About
+                </a>
+                <a href="#gallery" class="text-[#0E0D0D] hover:text-[#E83E8C] transition-colors duration-300 font-favorit text-sm tracking-wide font-medium">
+                    Gallery
+                </a>
+                <a href="#contact" class="text-[#0E0D0D] hover:text-[#E83E8C] transition-colors duration-300 font-favorit text-sm tracking-wide font-medium">
+                    Contact
+                </a>
+            </div>
+            
+            <!-- No spacer needed with right-aligned nav -->
+            
+            <!-- Mobile Menu Toggle -->  
+            <div class="md:hidden relative z-[100]">
+                <button class="menu-toggle text-[#0E0D0D] focus:outline-none p-3" onclick="openMobileMenuWithAnimation()" style="position: relative; z-index: 100; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: rgba(255,255,255,0.5); border-radius: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="black">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Animated Mobile Menu -->  
+    <div id="mobile-menu" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: black; z-index: 9999; overflow: auto; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;">
+        <div style="padding: 24px; height: 100%; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 64px;">
+                <div style="color: white; font-weight: 500; font-family: 'Favorit', sans-serif;">KG1 Studio</div>
+                <button id="close-menu-btn" onclick="closeMobileMenuWithAnimation()" style="width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; cursor: pointer; background-color: rgba(255,255,255,0.1); border-radius: 8px; border: none; outline: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div style="display: flex; flex-direction: column; gap: 32px; margin-top: 32px;">
+                <a href="#" class="mobile-link" onclick="closeMobileMenuWithAnimation()" style="color: white; text-decoration: none; font-size: 2rem; font-weight: 700; font-family: 'Favorit', sans-serif; transition: color 0.3s; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease;">
+                    Home
+                </a>
+                <a href="#about" class="mobile-link" onclick="closeMobileMenuWithAnimation()" style="color: white; text-decoration: none; font-size: 2rem; font-weight: 700; font-family: 'Favorit', sans-serif; transition: color 0.3s; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.1s;">
+                    About
+                </a>
+                <a href="#gallery" class="mobile-link" onclick="closeMobileMenuWithAnimation()" style="color: white; text-decoration: none; font-size: 2rem; font-weight: 700; font-family: 'Favorit', sans-serif; transition: color 0.3s; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.2s;">
+                    Gallery
+                </a>
+                <a href="#contact" class="mobile-link" onclick="closeMobileMenuWithAnimation()" style="color: white; text-decoration: none; font-size: 2rem; font-weight: 700; font-family: 'Favorit', sans-serif; transition: color 0.3s; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.3s;">
+                    Contact
+                </a>
+            </div>
+            
+            <div style="margin-top: auto; margin-bottom: 32px;">
+                <p style="color: #a0a0a0; font-size: 0.875rem; font-family: 'Favorit', sans-serif;">© 2025 KG1 Studio</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hero Section - Minimalist Style -->  
+    <section id="hero" class="min-h-screen flex items-center pt-24 pb-16 relative overflow-hidden bg-[#f5f5f5]">
+        <div class="container mx-auto px-6 md:px-16 lg:px-24 z-10 relative">
+            <div class="flex flex-col md:flex-row items-start justify-between">
+                <!-- Image on left (mobile: top) with significantly increased scale -->
+                <div class="w-full md:w-1/3 mb-8 md:mb-0 md:mt-12">
+                    <div class="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 overflow-hidden transition-all duration-700 hover:scale-110 relative group">
+                        <img src="gallery/2024-03-23 (5).jpg" alt="KG1 Studio Performance" class="w-full h-full object-cover transition-all duration-700 hover:filter hover:brightness-110">
+                        <div class="absolute inset-0 border-2 border-[#0E0D0D]/10 pointer-events-none group-hover:border-[#0E0D0D]/20 transition-all duration-700"></div>
+                        <div class="absolute -bottom-3 -right-3 w-full h-full border-2 border-[#0E0D0D] -z-10 group-hover:-bottom-4 group-hover:-right-4 transition-all duration-700"></div>
+                        <div class="absolute -top-3 -left-3 w-12 h-12 bg-[#E83E8C]/10 rounded-full -z-10 group-hover:w-16 group-hover:h-16 transition-all duration-700"></div>
+                    </div>
+                </div>
+                
+                <!-- Main content - large typography -->
+                <div class="w-full md:w-2/3 pl-0 md:pl-12">
+                    <h1 class="text-7xl md:text-9xl lg:text-[10rem] font-bold mb-6 font-favorit tracking-tight leading-none">
+                        <span class="block text-[#0E0D0D]">KG1</span>
+                        <span class="block text-[#0E0D0D]">Studio</span>
+                    </h1>
+                    
+                    <div class="mt-16 md:mt-24 flex flex-col md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <p class="text-lg text-gray-700 mb-8 md:mb-0 max-w-md">Experience the art of movement in a space designed for expression, growth, and community.</p>
+                            
+                            <div class="mt-8 md:mt-12">
+                                <p class="text-sm text-gray-500">
+                                    <span class="block">Interactive Dance Studio KG1</span>
+                                    <span class="block">Based in Chennai , India</span>
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-4 mt-8 md:mt-0">
+                            <a href="#gallery" class="gallery-btn px-8 py-3 border border-[#0E0D0D] text-[#0E0D0D] rounded-none font-medium">
+                                View Gallery
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section - Ultra Aesthetic Design with Text Reveals -->
+    <section id="about" class="py-24 md:py-36 bg-[#f8f8f8] relative border-t-4 border-[#E83E8C]" style="min-height: 100vh;">
+        <!-- Decorative background elements - positioned relative to the section -->
+        <div class="absolute top-20 left-10 w-64 h-64 rounded-full bg-gradient-to-r from-[#E83E8C]/5 to-transparent blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 rounded-full bg-gradient-to-l from-[#E83E8C]/5 to-transparent blur-3xl pointer-events-none"></div>
+        
+        <div class="container mx-auto px-6 md:px-16 lg:px-24 relative z-10">
+            <!-- Section header with reveal animation -->
+            <div class="mb-24 md:mb-32 reveal-element">
+                <div class="flex flex-col items-center text-center mb-8">
+                    <span class="text-xs uppercase tracking-[0.3em] text-[#E83E8C] font-medium mb-4 reveal-text">About Us</span>
+                    <h2 class="text-6xl md:text-7xl lg:text-8xl font-bold font-favorit tracking-tight text-[#0E0D0D] reveal-text">
+                        Our Studio
+                    </h2>
+                    <div class="h-0.5 w-16 bg-[#E83E8C] mt-8 reveal-line"></div>
+                </div>
+                
+                <p class="text-xl md:text-2xl text-center max-w-3xl mx-auto text-[#ffff] font-favorit leading-relaxed mt-8 reveal-text">
+                    A space where movement becomes art and expression finds its rhythm.
+                </p>
+            </div>
+            
+            <!-- Image grid with reveal animations -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 mb-24 reveal-element">
+                <!-- Main large image -->
+                <div class="md:col-span-7 reveal-image">
+                    <div class="relative overflow-hidden group h-[70vh] md:h-[80vh]">
+                        <img src="gallery/2024-03-23 (3).jpg" alt="KG1 Studio Space" 
+                             class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                        
+                        <!-- Overlay with text -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-8 md:p-12">
+                            <!-- <div>
+                                <h3 class="text-white text-2xl md:text-3xl font-bold mb-3">Our Space</h3>
+                                <p class="text-gray-400 max-w-md">Designed for movement, expression, and artistic growth.</p>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Two smaller images -->
+                <div class="md:col-span-5 grid grid-cols-1 gap-8">
+                    <div class="reveal-image delay-200">
+                        <div class="relative overflow-hidden group h-[40vh]">
+                            <img src="gallery/2024-03-23 (5).jpg" alt="KG1 Studio Performance" 
+                                 class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                            
+                            <!-- Overlay with text -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-8">
+                                <!-- <div>
+                                    <h3 class="text-white text-xl font-bold mb-2">Our Performances</h3>
+                                    <p class="text-gray-400">Where practice meets passion on stage.</p>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="reveal-image delay-400">
+                        <div class="relative overflow-hidden group h-[30vh]">
+                            <img src="gallery/unnamed (1).jpg" alt="KG1 Studio Class" 
+                                 class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105">
+                            
+                            <!-- Overlay with text -->
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-8">
+                                <!-- <div>
+                                    <h3 class="text-white text-xl font-bold mb-2">Our Classes</h3>
+                                    <p class="text-gray-400">Learn, grow, and connect through movement.</p>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Text content with reveal animations -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 reveal-element">
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-8 reveal-text">Our Story</h3>
+                    <p class="text-lg text-gray-700 mb-6 leading-relaxed reveal-text delay-200">
+                        KG1 Studio was founded with a vision to create a sanctuary for dancers of all levels. Our studio combines technical excellence with creative expression, providing a nurturing environment where students can explore their potential.  
+                    </p>
+                    
+                    <p class="text-lg text-gray-700 mb-8 leading-relaxed reveal-text delay-400">
+                        We believe that dance is more than movement—it's a language that transcends barriers and connects us to our deeper selves. Our instructors bring decades of experience and passion to each class.
+                    </p>
+                    
+                    <a href="#gallery" class="inline-block mt-4 px-8 py-3 bg-[#0E0D0D] text-white hover:bg-[#E83E8C] transition-colors duration-300 reveal-button">Explore Gallery</a>
+                </div>
+                
+                <!-- Features with reveal animations -->
+                <div class="space-y-12">
+                    <div class="reveal-feature">
+                        <div class="flex items-center mb-4">
+                            <span class="text-5xl font-light text-[#E83E8C] mr-4">01</span>
+                            <h3 class="text-xl font-bold">Professional Instruction</h3>
+                        </div>
+                        <p class="text-gray-700 leading-relaxed pl-16">Learn from experienced dancers with international backgrounds and years of performance expertise.</p>
+                    </div>
+                    
+                    <div class="reveal-feature delay-200">
+                        <div class="flex items-center mb-4">
+                            <span class="text-5xl font-light text-[#E83E8C] mr-4">02</span>
+                            <h3 class="text-xl font-bold">State-of-the-art Facilities</h3>
+                        </div>
+                        <p class="text-gray-700 leading-relaxed pl-16">Spacious studios with professional flooring, premium sound systems, and perfect lighting.</p>
+                    </div>
+                    
+                    <div class="reveal-feature delay-400">
+                        <div class="flex items-center mb-4">
+                            <span class="text-5xl font-light text-[#E83E8C] mr-4">03</span>
+                            <h3 class="text-xl font-bold">Inclusive Community</h3>
+                        </div>
+                        <p class="text-gray-700 leading-relaxed pl-16">A welcoming environment for dancers of all ages and skill levels to connect and grow together.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Gallery Section - Modern Card Grid Layout -->
+    <section id="gallery" class="py-24 md:py-32 bg-[#f5f5f5]">
+        <div class="container mx-auto px-6 md:px-16 lg:px-24">
+            <!-- Section header with reveal animation -->
+            <div class="mb-16 md:mb-24 reveal-element">
+                <div class="flex flex-col items-center text-center mb-8">
+                    <span class="text-xs uppercase tracking-[0.3em] text-[#E83E8C] font-medium mb-4 reveal-text">Our Work</span>
+                    <h2 class="text-6xl md:text-7xl lg:text-8xl font-bold font-favorit tracking-tight text-[#0E0D0D] reveal-text">
+                        Gallery
+                    </h2>
+                    <div class="h-0.5 w-16 bg-[#E83E8C] mt-8 reveal-line"></div>
+                </div>
+                <p class="text-xl md:text-2xl text-center max-w-3xl mx-auto text-[#0E0D0D] font-favorit leading-relaxed reveal-text delay-200">
+                    Capturing moments of expression, movement, and artistry from our studio.
+                </p>
+            </div>
+            
+            <!-- Enhanced aesthetic grid layout with masonry-like effect -->
+            <div class="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-6">
+                <!-- Large feature card - spans 6 columns on medium screens, 8 on large -->
+                <div class="md:col-span-6 lg:col-span-8 rounded-3xl overflow-hidden shadow-lg relative group h-[500px]">
+                    <img src="gallery/2024-03-23 (1).jpg" alt="Dance Performance" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                        <!-- <div class="bg-[#E83E8C] text-white text-xs font-medium px-3 py-1 rounded-full w-fit mb-3">Featured</div> -->
+                        <!-- <h3 class="text-3xl font-bold text-white mb-2">Contemporary Dance</h3>
+                        <p class="text-white/80 mb-4">KG1 Studio Performance</p> -->
+                    </div>
+                </div>
+                
+                <!-- Vertical tall card - spans 3 columns on medium, 4 on large -->
+                <div class="md:col-span-3 lg:col-span-4 rounded-3xl overflow-hidden shadow-lg relative group h-[500px]">
+                    <img src="gallery/2024-03-23 (2).jpg" alt="Dance Studio" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                        <!-- <h3 class="text-2xl font-bold text-white mb-2">Studio Practice</h3>
+                        <p class="text-white/80">Professional dance environment</p> -->
+                    </div>
+                </div>
+                
+                <!-- Small square card - spans 3 columns on medium, 3 on large -->
+                <div class="md:col-span-3 lg:col-span-3 rounded-3xl overflow-hidden shadow-lg relative group h-[240px]">
+                    <img src="gallery/2024-03-23 (3).jpg" alt="Dance Rehearsal" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4">
+                        <!-- <h3 class="text-xl font-bold text-white">Group Rehearsal</h3> -->
+                    </div>
+                </div>
+                
+                <!-- Small square card - spans 3 columns on medium, 3 on large -->
+                <div class="md:col-span-3 lg:col-span-3 rounded-3xl overflow-hidden shadow-lg relative group h-[240px]">
+                    <img src="gallery/2024-03-23 (4).jpg" alt="Dance Class" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4">
+                        <!-- <h3 class="text-xl font-bold text-white">Advanced Technique</h3> -->
+                    </div>
+                </div>
+                
+                <!-- Medium rectangle card - spans 6 columns on medium, 6 on large -->
+                <div class="md:col-span-6 lg:col-span-6 rounded-3xl overflow-hidden shadow-lg relative group h-[240px]">
+                    <img src="gallery/2024-03-23 (5).jpg" alt="Dance Performance" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                        <!-- <h3 class="text-2xl font-bold text-white mb-2">Solo Performance</h3>
+                        <p class="text-white/80">Artistic expression through movement</p> -->
+                    </div>
+                </div>
+                
+                <!-- Medium rectangle card - spans 6 columns on medium, 6 on large -->
+                <div class="md:col-span-6 lg:col-span-6 rounded-3xl overflow-hidden shadow-lg relative group h-[320px]">
+                    <img src="gallery/2024-03-23 (6).jpg" alt="Dance Workshop" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6">
+                        <!-- <h3 class="text-2xl font-bold text-white mb-2">Workshop Session</h3>
+                        <p class="text-white/80">KG1 Studio Workshop</p> -->
+                    </div>
+                </div>
+                
+                <!-- Small square card - spans 3 columns on medium, 3 on large -->
+                <div class="md:col-span-3 lg:col-span-3 rounded-3xl overflow-hidden shadow-lg relative group h-[320px]">
+                    <img src="gallery/2024-03-23.jpg" alt="Dance Studio" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4">
+                        <!-- <h3 class="text-xl font-bold text-white">Studio Space</h3> -->
+                    </div>
+                </div>
+                
+                <!-- Small square card - spans 3 columns on medium, 3 on large -->
+                <div class="md:col-span-3 lg:col-span-3 rounded-3xl overflow-hidden shadow-lg relative group h-[320px]">
+                    <img src="gallery/unnamed (1).jpg" alt="Dance Performance" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4">
+                        <!-- <h3 class="text-xl font-bold text-white">Stage Performance</h3> -->
+                    </div>
+                </div>
+                
+                <!-- Small square card - spans 3 columns on medium, 3 on large -->
+                <div class="md:col-span-3 lg:col-span-3 rounded-3xl overflow-hidden shadow-lg relative group h-[280px]">
+                    <img src="gallery/unnamed (2).jpg" alt="Dance Class" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4">
+                        <!-- <h3 class="text-xl font-bold text-white">Beginner Class</h3> -->
+                    </div>
+                </div>
+                
+                <!-- Split card - spans 3 columns on medium, 3 on large -->
+                <div class="md:col-span-3 lg:col-span-3 rounded-3xl overflow-hidden shadow-lg relative group h-[280px]">
+                    <div class="grid grid-cols-2 gap-2 h-full">
+                        <div class="relative overflow-hidden rounded-l-3xl">
+                            <img src="gallery/unnamed (3).jpg" alt="Dance Workshop" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-3">
+                                <!-- <h3 class="text-sm font-bold text-white">Choreography</h3> -->
+                            </div>
+                        </div>
+                        <div class="relative overflow-hidden rounded-r-3xl">
+                            <img src="gallery/unnamed.jpg" alt="Dance Studio" class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-3">
+                                <!-- <h3 class="text-sm font-bold text-white">Studio Environment</h3> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+    </section>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Contact Section with Map -->
+    <section id="contact" class="py-24 md:py-20 bg-gradient-to-b from-white to-[#f8f8f8] relative overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-64 h-64 bg-[#E83E8C]/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl translate-x-1/3 translate-y-1/3"></div>
+        
+        <div class="container mx-auto px-6 md:px-16 lg:px-24 relative z-10">
+            <!-- Section header with reveal animation -->
+            <div class="mb-16 md:mb-24 reveal-element">
+                <div class="flex flex-col items-center text-center mb-2">
+                    <div class="inline-flex items-center justify-center bg-[#E83E8C]/10 text-[#E83E8C] px-4 py-2 rounded-full mb-2">
+                    </div>
+                    <h2 class="text-6xl md:text-7xl lg:text-8xl font-bold font-favorit tracking-tight text-[#0E0D0D] reveal-text">
+                        Contact Us
+                    </h2>
+                    <div class="h-0.5 w-16 bg-[#E83E8C] mt-8 reveal-line"></div>
+                </div>
+                <p class="text-xl md:text-2xl text-center max-w-3xl mx-auto text-[#0E0D0D] font-favorit leading-relaxed reveal-text delay-200">
+                    Visit our studio or reach out for rentals and workshop inquiries.
+                </p>
+            </div>
+            
+            <!-- Contact content with map -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Map with decorative frame -->
+                <div class="rounded-3xl overflow-hidden shadow-xl h-[500px] relative border-8 border-white bg-white p-2 transform hover:rotate-1 transition-transform duration-500">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.9169943927513!2d80.2432888!3d13.0433195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5267376d4aaaab%3A0x9c71c0d0d6d7f034!2sKG1%20Studio!5e0!3m2!1sen!2sin!4v1696784389099!5m2!1sen!2sin" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                    <!-- Location marker overlay with animations -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none animate-bounce">
+                        <div class="relative">
+                            <div class="animate-ping absolute h-8 w-8 rounded-full bg-[#E83E8C]/70"></div>
+                            <div class="relative h-6 w-6 rounded-full bg-[#E83E8C] flex items-center justify-center shadow-lg">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-black" viewBox="0 0 20 20" fill="black">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="mt-1 bg-white px-3 py-1 rounded-md text-xs font-bold shadow-md text-center border border-[#E83E8C]/20">
+                            KG1 Studio
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Information -->
+                <div class="flex flex-col justify-center">
+                    <div class="bg-white rounded-3xl p-10 shadow-xl border border-gray-100 backdrop-blur-sm relative overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                        <!-- Decorative elements -->
+                        <div class="absolute -top-20 -right-20 w-40 h-40 bg-[#E83E8C]/10 rounded-full blur-xl group-hover:bg-[#E83E8C]/20 transition-colors duration-500"></div>
+                        <div class="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-xl group-hover:bg-indigo-500/20 transition-colors duration-500"></div>
+                        <div class="relative z-10">
+                        <h3 class="text-3xl font-bold mb-8 text-[#0E0D0D] flex items-center">
+                            <span class="bg-[#E83E8C]/10 text-[#E83E8C] p-2 rounded-lg mr-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="#E83E8C">
+                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                </svg>
+                            </span>
+                            Visit Our Studio
+                        </h3>
+                        
+                        <div class="space-y-8">
+                            <!-- Address -->
+                            <div class="flex items-start group/item hover:bg-[#f8f8f8] p-4 rounded-xl transition-colors duration-300">
+                                <div class="bg-gradient-to-br from-[#E83E8C] to-pink-600 rounded-xl p-3 mr-6 shadow-md group-hover/item:shadow-lg transition-all duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-black" viewBox="0 0 20 20" fill="black">
+                                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-medium mb-2 text-[#0E0D0D]">Our Location</h4>
+                                    <p class="text-gray-600">KG1 Studio, Chennai, Tamil Nadu, India</p>
+                                    <a href="https://maps.app.goo.gl/qMJeowvQ7KbQm33s6?g_st=ipc" target="_blank" class="inline-flex items-center text-[#E83E8C] font-medium mt-2 group-hover/item:translate-x-1 transition-transform duration-300">
+                                        Get Directions
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 text-black" viewBox="0 0 20 20" fill="black">
+                                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Phone -->
+                            <div class="flex items-start group/item hover:bg-[#f8f8f8] p-4 rounded-xl transition-colors duration-300">
+                                <div class="bg-gradient-to-br from-[#E83E8C] to-pink-600 rounded-xl p-3 mr-6 shadow-md group-hover/item:shadow-lg transition-all duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-black" viewBox="0 0 20 20" fill="black">
+                                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-medium mb-2 text-[#0E0D0D]">Contact Number</h4>
+                                    <p class="text-gray-600">For rentals and workshops:</p>
+                                    <a href="tel:+919840382233" class="inline-flex items-center text-[#E83E8C] font-medium mt-1 group-hover/item:translate-x-1 transition-transform duration-300">
+                                        +91 98403 82233
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="#E83E8C">
+                                            <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Hours -->
+                            <div class="flex items-start group/item hover:bg-[#f8f8f8] p-4 rounded-xl transition-colors duration-300">
+                                <div class="bg-gradient-to-br from-[#E83E8C] to-pink-600 rounded-xl p-3 mr-6 shadow-md group-hover/item:shadow-lg transition-all duration-300">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-black" viewBox="0 0 20 20" fill="black">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-medium mb-2 text-[#0E0D0D]">Studio Hours</h4>
+                                    <div class="space-y-1">
+                                        <p class="text-gray-600 flex justify-between"><span>Monday - Friday:</span> <span class="font-medium">9:00 AM - 8:00 PM</span></p>
+                                        <p class="text-gray-600 flex justify-between"><span>Saturday:</span> <span class="font-medium">10:00 AM - 6:00 PM</span></p>
+                                        <p class="text-gray-600 flex justify-between"><span>Sunday:</span> <span class="font-medium">By Appointment</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Social Media Links with modern design - Instagram only -->
+                        <div class="mt-12 pt-8 border-t border-gray-100">
+                            <h4 class="text-lg font-medium mb-6 text-[#0E0D0D] flex items-center">
+                                <span class="bg-[#E83E8C]/10 text-[#E83E8C] p-1.5 rounded-lg mr-3">
+                                    <i class="fas fa-hashtag text-[#E83E8C]"></i>
+                                </span>
+                                Connect With Us
+                            </h4>
+                            <div class="flex">
+                                <a href="https://www.instagram.com/kg1studio_chennai?igsh=MXdkN3FtNHZna3N4ZQ==" target="_blank" class="bg-white border border-gray-200 p-3 rounded-xl hover:border-[#E83E8C] transition-colors duration-300 shadow-sm hover:shadow-md">
+                                    <i class="fab fa-instagram text-[#E83E8C] text-2xl"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Simple Footer with Copyright Only -->
+    <footer class="bg-gradient-to-r from-[#0E0D0D] to-[#1a1a1a] text-white py-8 relative overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#E83E8C] to-indigo-500"></div>
+        
+        <div class="container mx-auto px-6 md:px-16 lg:px-24 relative z-10">
+            <!-- Copyright -->
+            <div class="flex justify-center items-center">
+                <p class="text-gray-400 text-sm">&copy; 2025 KG1 Studio. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="script.js"></script>
+    
+    <!-- Animated Mobile Menu JavaScript -->  
+    <script>
+        // Smooth animation functions for mobile menu
+        function openMobileMenuWithAnimation() {
+            console.log('Opening mobile menu with animation');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuLinks = document.querySelectorAll('.mobile-link');
+            
+            if (mobileMenu) {
+                // First make the menu visible but transparent
+                mobileMenu.style.visibility = 'visible';
+                
+                // After a tiny delay, fade it in
+                setTimeout(() => {
+                    mobileMenu.style.opacity = '1';
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                    
+                    // Animate in each menu item with staggered delay
+                    menuLinks.forEach((link, index) => {
+                        setTimeout(() => {
+                            link.style.opacity = '1';
+                            link.style.transform = 'translateY(0)';
+                        }, 100 + (index * 100));
+                    });
+                }, 10);
+            } else {
+                console.error('Mobile menu not found');
+            }
+        }
+        
+        function closeMobileMenuWithAnimation() {
+            console.log('Closing mobile menu with animation');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuLinks = document.querySelectorAll('.mobile-link');
+            
+            if (mobileMenu) {
+                // First fade out the menu items in reverse order
+                menuLinks.forEach((link, index) => {
+                    const delay = (menuLinks.length - index - 1) * 50;
+                    setTimeout(() => {
+                        link.style.opacity = '0';
+                        link.style.transform = 'translateY(20px)';
+                    }, delay);
+                });
+                
+                // Then fade out the menu
+                setTimeout(() => {
+                    mobileMenu.style.opacity = '0';
+                    
+                    // Finally hide it completely after the transition
+                    setTimeout(() => {
+                        mobileMenu.style.visibility = 'hidden';
+                        document.body.style.overflow = ''; // Re-enable scrolling
+                    }, 300);
+                }, 200);
+            } else {
+                console.error('Mobile menu not found');
+            }
+        }
+        
+        // Initialize when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Setting up animated mobile menu');
+            
+            // Set up hover effects for menu links
+            const mobileLinks = document.querySelectorAll('.mobile-link');
+            mobileLinks.forEach(function(link) {
+                link.addEventListener('mouseover', function() {
+                    this.style.color = '#E83E8C';
+                });
+                
+                link.addEventListener('mouseout', function() {
+                    this.style.color = 'white';
+                });
+            });
+            
+            // Add redundant event listeners for better compatibility
+            const menuToggle = document.querySelector('.menu-toggle');
+            if (menuToggle) {
+                menuToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openMobileMenuWithAnimation();
+                });
+            }
+            
+            const closeBtn = document.getElementById('close-menu-btn');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    closeMobileMenuWithAnimation();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
