@@ -223,8 +223,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (loadProgress < 100) {
-            // Slow down the progress increment
-            const increment = loadProgress < 40 ? 0.5 : 0.25; // Even slower after 40%
+            // Adjust progress increment - faster from 88% onwards
+            let increment;
+            if (loadProgress < 40) {
+                increment = 0.5; // Normal speed up to 40%
+            } else if (loadProgress < 76) {
+                increment = 0.25; // Slower from 40% to 88%
+            } else {
+                increment = 2.0; // Much faster from 88% to 100%
+            }
             loadProgress += increment;
             setTimeout(updateProgress, 100); // Update every 100ms instead of 50ms
         } else {

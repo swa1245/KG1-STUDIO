@@ -467,7 +467,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, var(--accent-color) 0%, transparent 70%);
+            /* background: linear-gradient(45deg, var(--accent-color) 0%, transparent 70%); */
             opacity: 0.1;
             pointer-events: none;
         }
@@ -479,8 +479,8 @@
             right: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(-45deg, var(--secondary-color) 0%, transparent 70%);
-            opacity: 0.1;
+            /* background: linear-gradient(-45deg, #fbbf24 0%, transparent 70%); */
+            opacity: 0.05;
             pointer-events: none;
         }
 
@@ -609,7 +609,7 @@
             font-family: 'Favorit';
             font-weight: bold;
             font-style: normal;
-            text-shadow: 0 0 15px rgba(232, 62, 140, 0.5);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
         .preloader-text .text-reveal::after {
@@ -619,7 +619,7 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.5s ease;
@@ -650,12 +650,12 @@
         .loading-bar {
             width: 0%;
             height: 100%;
-            background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+            background: linear-gradient(to right, #fbbf24, #f59e0b);
             position: absolute;
             top: 0;
             left: 0;
             transition: width 0.2s ease-out;
-            box-shadow: 0 0 10px 1px rgba(232, 62, 140, 0.5);
+            box-shadow: 0 0 10px 1px rgba(251, 191, 36, 0.5);
         }
 
         .loading-bar::after {
@@ -682,7 +682,7 @@
         }
 
         .loading-percentage span {
-            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -712,13 +712,6 @@
             border-radius: 50%;
             pointer-events: none;
             box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.3);
-        }
-
-        /* Colored particles */
-        .particle:nth-child(3n) {
-            background-color: rgba(232, 62, 140, 0.6);
-            /* Pink */
-            box-shadow: 0 0 10px 2px rgba(232, 62, 140, 0.4);
         }
 
         .particle:nth-child(3n+1) {
@@ -763,7 +756,7 @@
 
 <body class="bg-white" style="color: #0E0D0D;">
     <!-- Preloader -->
-    <!-- <div class="preloader">
+    <div class="preloader">
         <div class="particles-container"></div>
         <div class="preloader-logo">KG1</div>
         <div class="preloader-images">
@@ -785,7 +778,7 @@
             </div>
             <div class="loading-percentage">LOADING<span>0%</span></div>
         </div>
-    </div> -->
+    </div>
 
     <!-- Main Content -->
     <header class="fixed w-full top-0 left-0 z-50 transition-all duration-300">
