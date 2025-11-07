@@ -8,6 +8,39 @@
     <link href="https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- GSAP and ScrollTrigger Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        // Dropdown hover handling with delays
+        document.addEventListener('DOMContentLoaded', function () {
+            const dropdown = document.querySelector('.dropdown');
+            const dropdownContent = document.querySelector('.dropdown-content');
+            let hideTimeout;
+
+            function showDropdown() {
+                clearTimeout(hideTimeout);
+                dropdownContent.classList.add('show');
+            }
+
+            function hideDropdown() {
+                hideTimeout = setTimeout(() => {
+                    dropdownContent.classList.remove('show');
+                }, 300); // 300ms delay before hiding
+            }
+
+            // Show dropdown on hover over trigger
+            dropdown.addEventListener('mouseenter', showDropdown);
+
+            // Hide dropdown when leaving trigger (with delay)
+            dropdown.addEventListener('mouseleave', hideDropdown);
+
+            // Keep dropdown open when hovering over dropdown content
+            dropdownContent.addEventListener('mouseenter', showDropdown);
+
+            // Hide dropdown when leaving dropdown content (with delay)
+            dropdownContent.addEventListener('mouseleave', hideDropdown);
+        });
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
     <style>
@@ -46,7 +79,7 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: linear-gradient(to right, var(--accent-color), var(--secondary-color));
+            background: #000000;
             transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
         }
 
@@ -262,7 +295,7 @@
             width: 100%;
         }
 
-        .mobile-link.text-\[\#E83E8C\]::before {
+        .mobile-link.text-\[\#fbbf24\]::before {
             content: '';
             position: absolute;
             left: -20px;
@@ -271,7 +304,7 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background-color: #E83E8C;
+            background-color: #fbbf24;
         }
 
         .btn-hover-effect:hover {
@@ -346,6 +379,126 @@
         nav {
             position: relative;
             z-index: 2;
+        }
+
+        /* Creative Dropdown Menu Styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 248, 248, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            min-width: 220px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            z-index: 1000;
+            top: calc(100% + 5px);
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .dropdown-content::after {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: 0;
+            right: 0;
+            height: 15px;
+            background: transparent;
+        }
+
+        .dropdown-content::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 2px solid rgba(14, 14, 14, 0.2);
+            border-bottom: none;
+            border-right: none;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .dropdown-content a {
+            color: #0E0D0D;
+            padding: 16px 20px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-family: 'Favorit', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a::before {
+            content: '→';
+            margin-right: 1px;
+            font-weight: bold;
+            color: #000000;
+            transform: translateX(-10px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background: linear-gradient(135deg, #000000 0%, #000000 100%);
+            color: white;
+            transform: translateX(5px);
+            padding-left: 25px;
+        }
+
+        .dropdown-content a:hover::before {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .dropdown-content.show {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-toggle {
+            position: relative;
+            transition: all 0.3s ease;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px;
+        }
+
+        .dropdown-arrow {
+            font-size: 10px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            margin-left: 1px;
+        }
+
+        .dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown:hover .dropdown-toggle {
+            color: #000000;
         }
 
         /* Pseudo-element approach for blur effect */
@@ -756,9 +909,9 @@
 
 <body class="bg-white" style="color: #0E0D0D;">
     <!-- Preloader -->
-    <div class="preloader">
+    <!-- <div class="preloader">
         <div class="particles-container"></div>
-        <div class="preloader-logo">KG1</div>
+        <div class="preloader-logo">KG1 Studio</div>
         <div class="preloader-images">
             <img src="gallery/2024-03-23 (1).jpg" alt="KG1 Studio Dance" class="preloader-image">
             <img src="gallery/2024-03-23 (3).jpg" alt="KG1 Studio Performance" class="preloader-image">
@@ -770,7 +923,7 @@
             <span class="text-reveal">Stepping</span>
     <span class="text-reveal">into</span>
     <span class="text-reveal">Rhythm</span>
-    <span class="text-reveal">at KG1</span>
+    <span class="text-reveal">at KG1 Studio</span>
         </div>
         <div class="loading-container">
             <div class="loading-bar-container">
@@ -778,7 +931,7 @@
             </div>
             <div class="loading-percentage">LOADING<span>0%</span></div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Main Content -->
     <header class="fixed w-full top-0 left-0 z-50 transition-all duration-300">
@@ -807,6 +960,19 @@
                     class="text-[#0E0D0D] hover:text-[#E83E8C] transition-colors duration-300 font-favorit text-sm tracking-wide font-medium">
                     Gallery
                 </a>
+
+                <!-- Services Dropdown -->
+                <div class="dropdown">
+                    <a href="#"
+                        class="dropdown-toggle text-[#0E0D0D] hover:text-[#E83E8C] transition-colors duration-300 font-favorit text-sm tracking-wide font-medium">
+                        Services <span class="dropdown-arrow">▼</span>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="#collaborations">Creative Collaborative</a>
+                        <a href="#space-details">Space Details</a>
+                    </div>
+                </div>
+
                 <a href="#contact"
                     class="text-[#0E0D0D] hover:text-[#E83E8C] transition-colors duration-300 font-favorit text-sm tracking-wide font-medium">
                     Contact
@@ -858,8 +1024,16 @@
                     style="color: white; text-decoration: none; font-size: 2rem; font-weight: 700; font-family: 'Favorit', sans-serif; transition: color 0.3s; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.2s;">
                     Gallery
                 </a>
-                <a href="#contact" class="mobile-link" onclick="closeMobileMenuWithAnimation()"
+                <a href="#collaborations" class="mobile-link" onclick="closeMobileMenuWithAnimation()"
                     style="color: white; text-decoration: none; font-size: 2rem; font-weight: 700; font-family: 'Favorit', sans-serif; transition: color 0.3s; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.3s;">
+                    Creative Collaborative
+                </a>
+                <a href="#space-details" class="mobile-link" onclick="closeMobileMenuWithAnimation()"
+                    style="color: white; text-decoration: none; font-size: 2rem; font-weight: 700; font-family: 'Favorit', sans-serif; transition: color 0.3s; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.4s;">
+                    Space Details
+                </a>
+                <a href="#contact" class="mobile-link" onclick="closeMobileMenuWithAnimation()"
+                    style="color: white; text-decoration: none; font-size: 2rem; font-weight: 700; font-family: 'Favorit', sans-serif; transition: color 0.3s; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.5s;">
                     Contact
                 </a>
             </div>
@@ -897,10 +1071,9 @@
                 <div class="w-full md:w-2/3 pl-0 md:pl-20">
                     <h1
                         class="text-7xl md:text-8xl lg:text-[10rem] font-bold mb-6 font-favorit tracking-tight leading-none">
+                        <span class="block text-black">KG1</span>
                         <span class="block text-white"
-                            style="-webkit-text-stroke: 2px black; text-stroke: 2px black;">KG1</span>
-                        <span class="block text-white"
-                            style="-webkit-text-stroke: 2px black; text-stroke: 2px black;">Studio</span>
+                            style="-webkit-text-stroke: 2px black">Studio</span>
                     </h1>
 
                     <div class="mt-16 md:mt-24 flex flex-col md:flex-row md:items-center md:justify-between">
@@ -910,7 +1083,7 @@
 
                             <div class="mt-8 md:mt-12">
                                 <p class="text-sm text-gray-500">
-                                    <span class="block">Interactive Dance Studio KG1</span>
+                                    <span class="block">Interactive Dance Studio, KG1 Studio</span>
                                     <span class="block">Based in Chennai , India</span>
                                 </p>
                             </div>
@@ -1301,7 +1474,8 @@
                         <h4 class="text-xl font-semibold text-black mb-4">How it works:</h4>
                         <div class="space-y-4">
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-2 mr-4 mt-1 flex-shrink-0 shadow-lg">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-2 mr-4 mt-1 flex-shrink-0 shadow-lg">
                                     <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1316,7 +1490,8 @@
                             </div>
 
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-2 mr-4 mt-1 flex-shrink-0 shadow-lg">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-2 mr-4 mt-1 flex-shrink-0 shadow-lg">
                                     <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1331,7 +1506,8 @@
                             </div>
 
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-2 mr-4 mt-1 flex-shrink-0 shadow-lg">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-2 mr-4 mt-1 flex-shrink-0 shadow-lg">
                                     <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1475,7 +1651,8 @@
 
                         <div class="space-y-4">
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
                                     <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1489,7 +1666,8 @@
                             </div>
 
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
                                     <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1503,7 +1681,8 @@
                             </div>
 
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
                                     <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1532,7 +1711,8 @@
 
                         <div class="space-y-4">
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
                                     <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1547,7 +1727,8 @@
                             </div>
 
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
                                     <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1561,7 +1742,8 @@
                             </div>
 
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
                                     <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1576,7 +1758,8 @@
                             </div>
 
                             <div class="flex items-start">
-                                <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
+                                <div
+                                    class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-full p-1 mr-3 mt-1 flex-shrink-0 shadow-md">
                                     <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd"
                                             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -1649,12 +1832,12 @@
                 <div
                     class="rounded-3xl overflow-hidden shadow-xl h-[500px] relative border-8 border-white bg-white p-2 transform hover:rotate-1 transition-transform duration-500">
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.9169943927513!2d80.2432888!3d13.0433195!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5267376d4aaaab%3A0x9c71c0d0d6d7f034!2sKG1%20Studio!5e0!3m2!1sen!2sin!4v1696784389099!5m2!1sen!2sin"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3886.9169943927513!2d80.2693519!3d13.0463072!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a5267a324347599%3A0x384cd1c1fe28ddf6!2sKG1%20Studio!5e0!3m2!1sen!2sin!4v1696784389099!5m2!1sen!2sin"
                         width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade">
                     </iframe>
                     <!-- Location marker overlay with animations -->
-                    <div
+                    <!-- <div
                         class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none animate-bounce">
                         <div class="relative">
                             <div class="animate-ping absolute h-8 w-8 rounded-full bg-[#E83E8C]/70"></div>
@@ -1672,7 +1855,7 @@
                             class="mt-1 bg-white px-3 py-1 rounded-md text-xs font-bold shadow-md text-center border border-[#E83E8C]/20">
                             KG1 Studio
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Contact Information -->
@@ -1905,7 +2088,7 @@
             const mobileLinks = document.querySelectorAll('.mobile-link');
             mobileLinks.forEach(function (link) {
                 link.addEventListener('mouseover', function () {
-                    this.style.color = '#E83E8C';
+                    this.style.color = '#fbbf24';
                 });
 
                 link.addEventListener('mouseout', function () {
